@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Layout/Header";
 import Meals from "./components/Meals/Meals";
-import CartProvider from "./store/CartProvider";
 import Cart from "./components/Cart/Cart";
+import { useDispatch } from "react-redux";
+import { getBasketMealsThunk } from "./redux/actions/basket-actions";
 
 function App() {
   const [cartIsShown, setCartIsShown] = useState(false);
-
+  const dispatch = useDispatch();
   function showCartHandler() {
     setCartIsShown(true);
   }
@@ -15,14 +16,18 @@ function App() {
     setCartIsShown(false);
   }
 
+  useEffect(() => {
+    dispatch(getBasketMealsThunk());
+  }, []);
+
   return (
-    <CartProvider>
+    <>
       {cartIsShown && <Cart onClose={hideCartHandler} />}
       <Header onShowCart={showCartHandler} />
       <main>
         <Meals />
       </main>
-    </CartProvider>
+    </>
   );
 }
 
